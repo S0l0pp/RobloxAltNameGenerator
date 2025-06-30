@@ -30,7 +30,7 @@ def run_check(base, length, count, delay, export, output_box):
     usernames = gen_usernames(base, length, count)
     available = []
 
-    output_box.insert(tk.END, f"Checking {len(usernames)} usernames...\n\n")
+    output_box.insert(tk.END, f"☁️ Checking {len(usernames)} usernames...\n\n")
     output_box.update()
 
     for name in usernames:
@@ -73,40 +73,50 @@ def start_gui():
             messagebox.showerror("Input Error", "Please enter valid numeric values.")
 
     window = tk.Tk()
-    window.title("Roblox Username Checker")
-    window.geometry("600x500")
+    window.title("☁️ Roblox Username Checker")
+    window.geometry("700x600")
+    window.configure(bg="#e6f2ff")  # Cloudy pastel blue
+    window.resizable(False, False)
+
+    font_style = ("Segoe UI", 12)
 
     # Inputs
-    tk.Label(window, text="Base:").grid(row=0, column=0, sticky="e")
-    base_entry = tk.Entry(window)
-    base_entry.insert(0, "ALT")
-    base_entry.grid(row=0, column=1)
+    def label(text, row):
+        tk.Label(window, text=text, bg="#e6f2ff", font=font_style).grid(row=row, column=0, sticky="e", padx=10, pady=5)
 
-    tk.Label(window, text="Length:").grid(row=1, column=0, sticky="e")
-    length_entry = tk.Entry(window)
-    length_entry.insert(0, "10")
-    length_entry.grid(row=1, column=1)
+    def entry(default, row):
+        e = tk.Entry(window, font=font_style, bg="white", fg="#333", relief="flat", bd=4)
+        e.insert(0, default)
+        e.grid(row=row, column=1, sticky="w", padx=5, pady=5, ipadx=10, ipady=4)
+        return e
 
-    tk.Label(window, text="Count:").grid(row=2, column=0, sticky="e")
-    count_entry = tk.Entry(window)
-    count_entry.insert(0, "30")
-    count_entry.grid(row=2, column=1)
+    label("Base:", 0)
+    base_entry = entry("ALT", 0)
 
-    tk.Label(window, text="Delay (s):").grid(row=3, column=0, sticky="e")
-    delay_entry = tk.Entry(window)
-    delay_entry.insert(0, "0.5")
-    delay_entry.grid(row=3, column=1)
+    label("Length:", 1)
+    length_entry = entry("10", 1)
+
+    label("Count:", 2)
+    count_entry = entry("30", 2)
+
+    label("Delay (s):", 3)
+    delay_entry = entry("0.5", 3)
 
     export_var = tk.BooleanVar(value=True)
-    export_check = tk.Checkbutton(window, text="Export available usernames", variable=export_var)
-    export_check.grid(row=4, column=1, sticky="w")
+    export_check = tk.Checkbutton(window, text="☁ Export available usernames", variable=export_var,
+                                  font=font_style, bg="#e6f2ff", activebackground="#e6f2ff")
+    export_check.grid(row=4, column=1, sticky="w", padx=5)
 
-    run_button = tk.Button(window, text="Run Check", command=on_run)
-    run_button.grid(row=5, column=1, pady=10)
+    run_button = tk.Button(window, text="☁ Run Check", command=on_run,
+                           font=("Segoe UI", 13, "bold"), bg="#b3d9ff", fg="#003366",
+                           activebackground="#99ccff", relief="flat", padx=10, pady=8)
+    run_button.grid(row=5, column=1, pady=10, sticky="w")
 
     # Output box
-    output_box = scrolledtext.ScrolledText(window, width=70, height=20)
-    output_box.grid(row=6, column=0, columnspan=2, padx=10, pady=10)
+    output_box = scrolledtext.ScrolledText(window, width=80, height=20,
+                                           font=("Consolas", 11), bg="white", fg="#333",
+                                           relief="flat", bd=5)
+    output_box.grid(row=6, column=0, columnspan=2, padx=20, pady=15)
 
     window.mainloop()
 
