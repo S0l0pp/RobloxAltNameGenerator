@@ -47,7 +47,7 @@ def run_check(base, length, count, delay, export, output_box):
 
     output_box.insert(tk.END, f"\n✅ {len(available)} available usernames found.\n")
     if export and available:
-        with open("available_usernames.txt", "w", encoding="utf-8") as f:
+        with open("YOUR available_usernames.txt DIRECTORY", "w", encoding="utf-8") as f:
             f.write("\n".join(available))
         output_box.insert(tk.END, "📁 Saved to available_usernames.txt\n")
     elif not available:
