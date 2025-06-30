@@ -1,6 +1,5 @@
 # RobloxAltNameGenerator
-It creates 30 alt names and check if they are taken or not (if names are banned like slurs they result in taken) and saves the one that are free on a file
-Remember that in the export section of the code you need to change the directory on wich the file available_usernames.exe is (You need to create it)
+Creates how many alt names you want and checks if they are taken or not, the ones that are taken will not be saved in the file, when you to a new run the txt file will automaticlly delete the old ones and save the new ones so that you don't need to worry about space problems.
 
 if EXPORT:
         if available:
