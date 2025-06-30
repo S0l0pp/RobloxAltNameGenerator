@@ -1,60 +1,49 @@
-import random
-import string
-import requests
-import time
+#include <std.h>
 
-# === SETTINGS ===
-BASE = "ALT"         # Prefix for usernames
-LENGTH = 10          # Total username length
-COUNT = 30           # Number of usernames to generate
-DELAY = 0.5          # Delay between checks (seconds, avoid rate limit)
-EXPORT = True        # Export available usernames to a file
+#define BASE    "ALT"   // Prefix
+#define LENGTH  10      // Username length  
+#define COUNT   30      // Number to generate  
+#define DELAY   500     // Delay in ms  
 
-# === Username generator ===
-def gen_usernames(base="", length=8, count=10):
-    chars = string.ascii_lowercase + string.digits
-    names = []
-    for _ in range(count):
-        suffix = ''.join(random.choice(chars) for _ in range(length - len(base)))
-        names.append(base + suffix)
-    return names
+U0 GenUsername(U8 *buf, U8 *base, I64 len)  
+{
+  I64 i, base_len = StrLen(base);  
+  MemCpy(buf, base, base_len);  
 
-# === Username availability checker ===
-def check_username(name):
-    url = f"https://auth.roblox.com/v1/usernames/validate?username={name}&birthday=2000-01-01"
-    try:
-        r = requests.get(url, timeout=10)
-        data = r.json()
-        return data.get("message") == "Username is valid"
-    except Exception as e:
-        print(f"[ERROR] {name}: {e}")
-        return False
+  for (i = base_len; i < len; i++)  
+    buf[i] = (Rand % 2) ? (Rand % 10 + '0') : (Rand % 26 + 'a');  
+  buf[len] = 0;  
+}  
 
-# === Main ===
-def main():
-    usernames = gen_usernames(BASE, LENGTH, COUNT)
-    available = []
+BOOL CheckUsername(U8 *name)  
+{
+  // TempleOS can't do HTTPS, so this is a placeholder  
+  "%s\n", name;  
+  return Rand % 2; // Random result for demo  
+}  
 
-    print(f"Checking {len(usernames)} usernames...\n")
-    for name in usernames:
-        valid = check_username(name)
-        if valid:
-            print(f"✅ AVAILABLE: {name}")
-            available.append(name)
-        else:
-            print(f"❌ TAKEN:     {name}")
-        time.sleep(DELAY)
+U0 Main()  
+{
+  U8 names[COUNT][LENGTH+1];  
+  U8 available[COUNT][LENGTH+1];  
+  I64 i, avail_count = 0;  
 
-    print("\nDone.")
-    print(f"\n✅ {len(available)} available usernames found.")
-    if EXPORT:
-        if available:
-            with open("YOUR available_usernames.exe DIRECTORY", "w", encoding="utf-8") as f:
-                f.write("\n".join(available))
-        print("📁 Saved to available_usernames.txt")
-    else:
-        print("⚠️ No available usernames to save.")
+  for (i = 0; i < COUNT; i++)  
+    GenUsername(names[i], BASE, LENGTH);  
 
+  "Checking %d usernames...\n\n", COUNT;  
+  for (i = 0; i < COUNT; i++)  
+  {
+    if (CheckUsername(names[i]))  
+    {
+      "AVAILABLE: %s\n", names[i];  
+      StrCpy(available[avail_count++], names[i]);  
+    }  
+    else  
+      "TAKEN: %s\n", names[i];  
 
-if __name__ == "__main__":
-    main()
+    MSleep(DELAY);  
+  }  
+
+  "\nDone.\nAvailable: %d\n", avail_count;  
+}
